@@ -20,5 +20,6 @@ Syntax:
     //default zoom level 2
     java GameOfLife 300 200
 or
+
     //with zoom level 4
     java GameOfLife 300 200 4
