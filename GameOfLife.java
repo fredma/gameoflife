@@ -28,13 +28,15 @@ public class GameOfLife extends JPanel {
     private BufferedImage canvas;
     private int width;
     private int height;
+    private int zoom;
     private Cell[][] grid;
 
-    public GameOfLife(int w, int h) {
+    public GameOfLife(int w, int h, int z) {
         canvas = new BufferedImage(w,h, BufferedImage.TYPE_INT_RGB);
         grid = new Cell[h][w];
         width = w;
         height = h;
+        zoom = z;
 
         for (int j = 0; j < h; j++) {
             for (int i = 0; i < width; i++) {
@@ -58,7 +60,10 @@ public class GameOfLife extends JPanel {
 
     public void paint(Graphics g) {
         paintCanvas();
-        g.drawImage(canvas, 0, 0, this);
+        g.drawImage(canvas, 
+                    0, 0, width * zoom, height * zoom,
+                    0, 0, width, height,
+                    this);
         step();
         repaint();
     }
@@ -152,17 +157,26 @@ public class GameOfLife extends JPanel {
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Game of life");
-        if (args.length != 2) {
-            System.out.println("Syntax: java GameOfLife width height");
-            System.out.println("Example: java GameOfLife 300 400");
+        if (args.length < 2) {
+            System.out.println("Syntax: java GameOfLife width height <zoom>");
+            System.out.println("Example (default zoom level 2): java GameOfLife 300 200");
+            System.out.println("Example (zoom level 4): java GameOfLife 300 200 4");
             return;
+        }
+        int zoom = 2;
+        if (args.length == 3) {
+            zoom = Integer.parseInt(args[2]);
+            if (!(zoom > 0 && zoom <= 5)) {
+                System.out.println("Error: zoom must be > 0 and <= 5");
+                return;
+            }
         }
         int w = Integer.parseInt(args[0]);
         int h = Integer.parseInt(args[1]);
-        GameOfLife game = new GameOfLife(w,h);
+        GameOfLife game = new GameOfLife(w,h,zoom);
         game.populate();
         frame.getContentPane().add(game);
-        frame.setSize(w,h);
+        frame.setSize(w*zoom,h*zoom);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
