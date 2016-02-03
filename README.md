@@ -12,6 +12,8 @@ You need JDK to compile and run.
 
     javac GameOfLife.java
 
-Syntax: java GameOfLife width height
+Syntax:
+
+    //java GameOfLife width height
 
     java GameOfLife 300 300
